@@ -4,7 +4,7 @@ namespace DAL
 	{
 	public class ConsoleAppContext:DbContext
 		{
-		private readonly DbContextOptions<ConsoleAppContext> _contextOptions;
+		//private readonly DbContextOptions<ConsoleAppContext> _contextOptions;
 		public ConsoleAppContext()
 			{
 			//_contextOptions=new DbContextOptionsBuilder<ConsoleAppContext>()

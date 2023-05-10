@@ -10,7 +10,8 @@ namespace ConsoleApp
 		{
 		static void Main(string[] args)
 			{
-			Console.Write("Hi there!\nSelect:\n1. InitializeDB()\n2. CreateEntry() => Ф И О ДатаРождения Пол\n");
+			Console.Write("Hi there!\nSelect:\n1. InitializeDB()\n2. CreateEntry() => Ф И О ДатаРождения Пол"+
+				"\n3. AllRows()\n4. AutoRows()\n5. SampleWithTime()\n6. SampleWithTimeOptimised()\n");
 			string choice = Console.ReadLine();
 			do
 				{
