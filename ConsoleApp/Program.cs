@@ -1,4 +1,6 @@
-﻿using DAL;
+﻿using System.Diagnostics;
+
+using DAL;
 
 namespace ConsoleApp
 	{
@@ -6,6 +8,9 @@ namespace ConsoleApp
 		{
 		static void Main(string[] args)
 			{
+
+			Stopwatch stopWatch = new Stopwatch();
+
 			Console.Write("Hi there!\nSelect:\n1. InitializeDB()\n2. CreateEntry() => Ф И О ДатаРождения Пол\n");
 			string choice = Console.ReadLine();
 			do
@@ -20,6 +25,12 @@ namespace ConsoleApp
 						break;
 					case "3":
 						AllRows();
+						break;
+					case "4":
+						AutoRows();
+						break;
+					case "5":
+						SampleWithTime();
 						break;
 
 					}
@@ -74,6 +85,77 @@ namespace ConsoleApp
 					Console.WriteLine($"{u.FIO} {u.BirthDate} {u.Gender} {age}");
 					}
 				}
+			}
+		static void AutoRows()
+			{
+			char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+			Random random = new Random();
+
+			for(int i = 0; i<1000000; i++)
+				{
+				int nameLength = 3;
+				string randomName = "";
+
+				Type type = typeof(Gender);
+				Array genders = type.GetEnumValues();
+				int index = random.Next(genders.Length);
+				Gender randomGender = (Gender)genders.GetValue(index);
+
+				for(int j = 0; j<nameLength; j++)
+					{
+					int randomIndex = random.Next(alphabet.Length);
+					randomName+=alphabet[randomIndex];
+					}
+				string randomFIO = $"{randomName} {randomName} {randomName}";
+				User user = new()
+					{
+					FIO=randomFIO,
+					Gender=randomGender
+					};
+
+				DbCrud.CreateEntry<User>(user);
+				}
+
+			for(int k = 0; k<100; k++)
+				{
+				int nameLength = 2;
+				string randomName = "F";
+
+				for(int j = 0; j<nameLength; j++)
+					{
+					int randomIndex = random.Next(alphabet.Length);
+					randomName+=alphabet[randomIndex];
+					}
+				string randomFIO = $"{randomName} {randomName} {randomName}";
+				User user = new()
+					{
+					FIO=randomFIO,
+					Gender=Gender.Male
+					};
+
+				DbCrud.CreateEntry<User>(user);
+				}
+			Console.WriteLine("AutoRows done");
+
+			}
+
+		static void SampleWithTime()
+			{
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			using(var db = new ConsoleAppContext())
+				{
+				var sample = db.Users
+					.Where(u => u.FIO.StartsWith("F")&&u.Gender.Equals(Gender.Male))
+					.ToList();
+
+				foreach(User u in sample)
+					{
+					Console.WriteLine($"{u.FIO} {u.BirthDate} {u.Gender}");
+					}
+				}
+			stopwatch.Stop();
+			Console.WriteLine($"Complete time was {stopwatch.ElapsedMilliseconds} milliseconds");
 			}
 		}
 	}
