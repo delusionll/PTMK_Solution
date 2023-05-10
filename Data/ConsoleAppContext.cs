@@ -5,7 +5,7 @@ namespace DAL
 	public class ConsoleAppContext:DbContext
 		{
 		private readonly DbContextOptions<ConsoleAppContext> _contextOptions;
-		public ConsoleAppContext(DbContextOptions<ConsoleAppContext> options) : base(options)
+		public ConsoleAppContext()
 			{
 			//_contextOptions=new DbContextOptionsBuilder<ConsoleAppContext>()
 			//	.UseInMemoryDatabase("ConsoleAppContext")
@@ -17,11 +17,6 @@ namespace DAL
 			}
 
 		public DbSet<User> Users { get; set; } //Table 1 according to instructions
-		//protected override void OnModelCreating(ModelBuilder modelBuilder)
-		//	{
-		//	modelBuilder.Entity<User>()
-		//		.HasNoKey();
-		//	}
 
 		}
 	}

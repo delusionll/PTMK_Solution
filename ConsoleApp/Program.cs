@@ -1,36 +1,78 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-using DAL;
-
-using Microsoft.EntityFrameworkCore;
+﻿using DAL;
 
 namespace ConsoleApp
 	{
 	public class Program
 		{
-		static void Main()
+		static void Main(string[] args)
 			{
-			User userCheck = new()
+			Console.Write("Hi there!\nSelect:\n1. InitializeDB()\n2. CreateEntry() => Ф И О ДатаРождения Пол\n");
+			string choice = Console.ReadLine();
+			do
 				{
-				FIO="Check",
-				Gender = Gender.Male
+				switch(choice)
+					{
+					case "1":
+						InitializeDB();
+						break;
+					case "2":
+						CreateEntry();
+						break;
+					case "3":
+						AllRows();
+						break;
+
+					}
+				string newChoice = Console.ReadLine();
+				choice=newChoice;
+				} while(choice!="0");
+
+			}
+		static void InitializeDB()
+			{
+			DbCrud.InitializeDB();
+
+			Console.WriteLine("DB created");
+			}
+		static void CreateEntry()
+			{
+			string input = Console.ReadLine(); //ФИО ДатаРождения Пол
+			string[] words = input.Split(" ");
+			string fio = words[0]+" "+words[1]+" "+words[2];
+			DateOnly birthDate = DateOnly.Parse(words[3]);
+			string gender = words[4];
+
+			User newEntry = new()
+				{
+				FIO=fio,
+				BirthDate=birthDate
 				};
-			var options = new DbContextOptionsBuilder<ConsoleAppContext>()
-				.UseInMemoryDatabase("ConsoleAppContext")
-				.Options;
-			using(var db = new ConsoleAppContext(options))
+			if(gender.Equals("Мужской"))
 				{
-				db.Database.EnsureCreated();
+				newEntry.Gender=Gender.Male;
+				}
+			else
+				{
+				newEntry.Gender=Gender.Female;
+				}
+			DbCrud.CreateEntry<User>(newEntry);
+			Console.WriteLine("Entry created");
+			}
+		static void AllRows()
+			{
+			using(var db = new ConsoleAppContext())
+				{
+				var allRows = db.Users
+					.OrderBy(u => u.FIO)
+					.ToList();
 
-				db.Add<User>(userCheck);
-				db.SaveChanges();
-
-				Console.WriteLine(db.ContextId);
-				Console.WriteLine(db.Model);
-
-				User userWrite = db.Users.Find(userCheck.Id);
-
-				Console.WriteLine(userWrite.Gender);
+				foreach(User u in allRows)
+					{
+					DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+					int dif = currentDate.DayNumber-u.BirthDate.DayNumber;
+					int age = dif/(int)365.25;
+					Console.WriteLine($"{u.FIO} {u.BirthDate} {u.Gender} {age}");
+					}
 				}
 			}
 		}

@@ -11,7 +11,7 @@ namespace DAL
 		{
 		public Guid Id { get; set; } = Guid.NewGuid();
 		public string? FIO { get; set; }
-		public DateOnly? BirthDate { get; set; }
+		public DateOnly BirthDate { get; set; }
 		public Gender? Gender { get; set; }
 		}
 	}
