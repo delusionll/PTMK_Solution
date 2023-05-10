@@ -10,7 +10,7 @@ namespace DAL
 			//_contextOptions=new DbContextOptionsBuilder<ConsoleAppContext>()
 			//	.UseInMemoryDatabase("ConsoleAppContext")
 			//	.Options;
-			this.ChangeTracker.LazyLoadingEnabled = true;
+			//this.ChangeTracker.LazyLoadingEnabled = true;
 			}
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 			{

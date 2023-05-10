@@ -2,15 +2,14 @@
 
 using DAL;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace ConsoleApp
 	{
 	public class Program
 		{
 		static void Main(string[] args)
 			{
-
-			Stopwatch stopWatch = new Stopwatch();
-
 			Console.Write("Hi there!\nSelect:\n1. InitializeDB()\n2. CreateEntry() => Ф И О ДатаРождения Пол\n");
 			string choice = Console.ReadLine();
 			do
@@ -31,6 +30,9 @@ namespace ConsoleApp
 						break;
 					case "5":
 						SampleWithTime();
+						break;
+					case "6":
+						SampleWithTimeOptimised();
 						break;
 
 					}
@@ -147,6 +149,27 @@ namespace ConsoleApp
 				{
 				var sample = db.Users
 					.Where(u => u.FIO.StartsWith("F")&&u.Gender.Equals(Gender.Male))
+					.ToList();
+
+				foreach(User u in sample)
+					{
+					Console.WriteLine($"{u.FIO} {u.BirthDate} {u.Gender}");
+					}
+				}
+			stopwatch.Stop();
+			Console.WriteLine($"Complete time was {stopwatch.ElapsedMilliseconds} milliseconds");
+			}
+
+
+		static void SampleWithTimeOptimised()
+			{
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			using(var db = new ConsoleAppContext())
+				{
+				var sample = db.Users
+					.Where(u => u.FIO.StartsWith("F")&&u.Gender.Equals(Gender.Male))
+					.AsNoTracking()
 					.ToList();
 
 				foreach(User u in sample)
