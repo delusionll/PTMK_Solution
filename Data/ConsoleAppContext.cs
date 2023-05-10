@@ -19,5 +19,11 @@ namespace DAL
 
 		public DbSet<User> Users { get; set; } //Table 1 according to instructions
 
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+			{
+			modelBuilder.Entity<User>().HasIndex(u => u.Gender, "Gender index");
+			modelBuilder.Entity<User>().HasIndex(u => u.FIO, "FIO index");
+			}
+
 		}
 	}
